@@ -18,6 +18,10 @@ app.use(errorHandler);
 app.use(express.json());
 app.use(cors());
 
+app.get("/", (req, res) => {
+  res.status(200).json({ message: "Deployed backend successfully in vercel" });
+});
+
 app.use("/users", userRouter);
 app.use("/favs", favsRoute);
 
