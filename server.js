@@ -13,7 +13,6 @@ const app = express();
 connectDB();
 
 const port = process.env.PORT || 5000;
-app.use(errorHandler);
 
 app.use(express.json());
 app.use(cors());
@@ -24,6 +23,8 @@ app.get("/", (req, res) => {
 
 app.use("/users", userRouter);
 app.use("/favs", favsRoute);
+
+app.use(errorHandler);
 
 app.listen(port, () => {
   console.log(`Server is running in port ${port}`);
