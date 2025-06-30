@@ -1,3 +1,5 @@
+//
+
 import jwt from "jsonwebtoken";
 import asyncHandler from "express-async-handler";
 
@@ -6,27 +8,25 @@ const validateToken = asyncHandler(async (req, res, next) => {
 
   if (!headerToken) {
     res.status(400);
-    throw Error("token required");
+    throw new Error("Token required");
   }
 
   if (headerToken && headerToken.startsWith("Bearer")) {
     const obtainedToken = headerToken.split(" ")[1];
 
-    jwt.verify(obtainedToken, process.env.SEC_TOKEN, (err, decode) => {
-      if (err) {
-        res.status(401);
-        throw new Error("Token is invalid or expired");
-      } else {
-        const user = {
-          id: decode.id,
-          username: decode.username,
-          email: decode.email,
-        };
-
-        req.user = user;
-        next();
-      }
-    });
+    try {
+      const decode = jwt.verify(obtainedToken, process.env.SEC_TOKEN);
+      const user = {
+        id: decode.id,
+        username: decode.username,
+        email: decode.email,
+      };
+      req.user = user;
+      next();
+    } catch (err) {
+      res.status(401);
+      throw new Error("Token is invalid or expired");
+    }
   }
 });
 

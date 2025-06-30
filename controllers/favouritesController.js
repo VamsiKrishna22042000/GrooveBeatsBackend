@@ -43,15 +43,10 @@ export const favDelete = asyncHandler(async (req, res) => {
 
   const deleteSong = await Favourites.deleteOne({ uId, id: sId });
 
-  try {
-    if (deleteSong.deletedCount === 0) {
-      res.status(404);
-      throw new Error("Song not found for this user");
-    } else {
-      res.status(200).json({ message: `Song deleted successfully` });
-    }
-  } catch (err) {
-    res.status(500);
-    throw new Error("Internal Server Error");
+  if (deleteSong.deletedCount === 0) {
+    res.status(404);
+    throw new Error("Song not found for this user");
   }
+
+  res.status(200).json({ message: `Song deleted successfully` });
 });
